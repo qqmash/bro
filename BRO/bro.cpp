@@ -3,11 +3,26 @@
 #include <QWebSettings>
 #include <QFile>
 
+#include <QSettings>
+
 bro::bro(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::bro)
 {
     ui->setupUi(this);
+
+    QSettings *settings = new QSettings("settings.conf", QSettings::NativeFormat);
+    //settings->setValue("settings/size",1);
+    settings->sync();
+
+    qDebug() << settings->value("settings/size", 1).toReal();
+
+    ui->webView->setZoomFactor(settings->value("settings/size", 1).toReal());
+
+    qDebug() << ui->webView->zoomFactor();
+    //qDebug() << settings->value("settings/size",ui->webView->zoomFactor()).toString();
+
+    //ui->webView->setZoomFactor(2);
 
     QWebSettings::clearMemoryCaches();
     //QWebSettings::setLocalStoragePath(QString("~/.cache/bro/"));
@@ -65,12 +80,14 @@ void bro::slotTimerAlarm()
 
 void bro::keyPressEvent(QKeyEvent *k)
 {
+    QSettings *settings = new QSettings("settings.conf", QSettings::NativeFormat);
+/*
     QFile settings("bro.conf");
     if (settings.open(QIODevice::ReadWrite))
     {
         QTextStream stream (&settings);
         stream << "something" << endl;
-    }
+    }*/
 
     switch(k->key())
     {
@@ -98,6 +115,9 @@ void bro::keyPressEvent(QKeyEvent *k)
             k->accept();
             ui->webView->setZoomFactor(ui->webView->zoomFactor() + 0.1);
             qDebug() << "Zoom +";
+
+            settings->setValue("settings/size",ui->webView->zoomFactor());
+            qDebug() << settings->value("settings/size", 1).toReal();
             /*if (settings.open(QIODevice::ReadWrite))
             {
                 QDataStream stream (&settings);
@@ -108,6 +128,9 @@ void bro::keyPressEvent(QKeyEvent *k)
             k->accept();
             ui->webView->setZoomFactor(ui->webView->zoomFactor() - 0.1);
             qDebug() << "Zoom -";
+
+            settings->setValue("settings/size",ui->webView->zoomFactor());
+            qDebug() << settings->value("settings/size", 1).toReal();
             /*if (settings.open(QIODevice::ReadWrite))
             {
                 QDataStream stream (&settings);
