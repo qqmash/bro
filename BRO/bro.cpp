@@ -1,9 +1,5 @@
 #include "bro.h"
 #include "ui_bro.h"
-#include <QWebSettings>
-#include <QFile>
-
-#include <QSettings>
 
 bro::bro(QWidget *parent) :
     QMainWindow(parent),
@@ -12,17 +8,11 @@ bro::bro(QWidget *parent) :
     ui->setupUi(this);
 
     QSettings *settings = new QSettings("settings.conf", QSettings::NativeFormat);
-    //settings->setValue("settings/size",1);
     settings->sync();
-
     qDebug() << settings->value("settings/size", 1).toReal();
 
     ui->webView->setZoomFactor(settings->value("settings/size", 1).toReal());
-
     qDebug() << ui->webView->zoomFactor();
-    //qDebug() << settings->value("settings/size",ui->webView->zoomFactor()).toString();
-
-    //ui->webView->setZoomFactor(2);
 
     QWebSettings::clearMemoryCaches();
     //QWebSettings::setLocalStoragePath(QString("~/.cache/bro/"));
@@ -41,24 +31,14 @@ bro::bro(QWidget *parent) :
     QObject::connect(actionReload, SIGNAL(triggered(bool)), this, SLOT(reload()));
     ui->webView->addAction(actionReload);
     */
-    //QTimer::singleShot(1000, this, SLOT(slotTimerAlarm()));
 
+    //QTimer::singleShot(1000, this, SLOT(slotTimerAlarm()));
     //ui->webView->setHtml("<div text-align=\"center\"><span vertical-align=\"middle\"><h1>UMAI</h1><br><h1>Loading...</h1></span><div>");
     ui->webView->show();
     //ui->webView->load(QUrl("http://127.0.0.1/"));
     //ui->webView->show();
     QTimer::singleShot(5000, this, SLOT(slotTimerAlarm()));
     ui->webView->load(QUrl("http://127.0.0.1/"));
-    /*
-    QTimer::singleShot(15000, this, SLOT(slotTimerAlarm()));
-    ui->webView->reload();
-    QTimer::singleShot(15000, this, SLOT(slotTimerAlarm()));
-    ui->webView->reload();
-    ui->webView->repaint();
-    ui->webView->update();
-    QTimer::singleShot(1000, this, SLOT(slotTimerAlarm()));
-    ui->webView->load(QUrl("http://127.0.0.1/"));
-    */
 
 }
 
@@ -71,10 +51,10 @@ void bro::slotTimerAlarm()
 {
     //after 27 second refresh page
     //if (ui->webView->page() && ui->webView->loadFinished())
-        //if (ui->webView->page()->networkAccessManager())
+    //if (ui->webView->page()->networkAccessManager())
     ui->webView->load(QUrl("http://127.0.0.1/"));
     ui->webView->show();
-    qDebug() << "first start!";//QTime::currentTime().toString("hh:mm:ss"));
+    qDebug() << "first start!";
 }
 
 
@@ -111,13 +91,15 @@ void bro::keyPressEvent(QKeyEvent *k)
             qDebug() << "Settings";
             break;
     case Qt::Key_Plus:
-    //case Qt::Key_plusminus:
             k->accept();
-            ui->webView->setZoomFactor(ui->webView->zoomFactor() + 0.1);
-            qDebug() << "Zoom +";
+            if (ui->webView->zoomFactor() < 3)
+            {
+                ui->webView->setZoomFactor(ui->webView->zoomFactor() + 0.05);
+                qDebug() << "Zoom +";
 
-            settings->setValue("settings/size",ui->webView->zoomFactor());
-            qDebug() << settings->value("settings/size", 1).toReal();
+                settings->setValue("settings/size",ui->webView->zoomFactor());
+                qDebug() << settings->value("settings/size", 1).toReal();
+            }
             /*if (settings.open(QIODevice::ReadWrite))
             {
                 QDataStream stream (&settings);
@@ -126,11 +108,14 @@ void bro::keyPressEvent(QKeyEvent *k)
             break;
     case Qt::Key_Minus:
             k->accept();
-            ui->webView->setZoomFactor(ui->webView->zoomFactor() - 0.1);
-            qDebug() << "Zoom -";
+            if (ui->webView->zoomFactor() > 0.5)
+            {
+                ui->webView->setZoomFactor(ui->webView->zoomFactor() - 0.05);
+                qDebug() << "Zoom -";
 
-            settings->setValue("settings/size",ui->webView->zoomFactor());
-            qDebug() << settings->value("settings/size", 1).toReal();
+                settings->setValue("settings/size",ui->webView->zoomFactor());
+                qDebug() << settings->value("settings/size", 1).toReal();
+            }
             /*if (settings.open(QIODevice::ReadWrite))
             {
                 QDataStream stream (&settings);

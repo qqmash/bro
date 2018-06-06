@@ -4,11 +4,14 @@
 #include <QMainWindow>
 
 #include <QTimer>
-#include <QTime>
 #include <QKeyEvent>
 #include <QtGui/QKeyEvent>
 
 #include <QProcess>
+
+#include <QWebSettings>
+#include <QFile>
+#include <QSettings>
 
 namespace Ui {
 class bro;
