@@ -1,0 +1,9 @@
+conf
+main.o
+mainwindow.o
+Makefile
+moc_mainwindow.cpp
+moc_mainwindow.o
+NEURA
+settings.conf
+ui_mainwindow.h

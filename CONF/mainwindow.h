@@ -3,6 +3,11 @@
 
 #include <QMainWindow>
 
+#include <QProcess>
+#include <QDebug>
+#include <QWebFrame>
+#include <QFile>
+
 namespace Ui {
 class MainWindow;
 }
@@ -16,13 +21,9 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
 
     void on_btnCalibrate_clicked();
-
     void on_btnSubmit_clicked();
-
     void on_webView_linkClicked(const QUrl &arg1);
 
 private:

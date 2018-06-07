@@ -1,11 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QProcess>
-#include <QDebug>
-#include <QWebFrame>
-#include <QFile>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -34,15 +29,15 @@ void MainWindow::on_btnCalibrate_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    //QProcess * exec;
-    //exec = new QProcess(this);
-//    exec->start("/bin/sh", "xinput_calibrator");
+    QProcess * exec;
+    exec = new QProcess(this);
+    exec->start("/bin/sh", "xinput_calibrator");
 
-//    QString program = "/bin/sh";
-//    QString shellFile = "/home/kiosk/shell.sh";
-//    QProcess *myProcess = new QProcess(this);
-//    myProcess->setStandardInputFile(shellFile);
-//    myProcess->start(program);
+    QString program = "/bin/sh";
+    QString shellFile = "/home/kiosk/shell.sh";
+    QProcess *myProcess = new QProcess(this);
+    myProcess->setStandardInputFile(shellFile);
+    myProcess->start(program);
 
     QProcess process;
     process.start("xinput_calibrator | sed -n '/Section/,/EndSection/p' > /etc/X11/xorg.conf.d/99-calibration.conf");
@@ -65,7 +60,37 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_btnSubmit_clicked()
 {
+    QProcess process;
+    process.start("/bin/sh -c \"/home/kiosk/script.sh\"");
+    process.start("/home/kiosk/test.sh");
+    process.waitForFinished();
+    qDebug() << "go-no";
 
+    QStringList argo, list;
+    argo.clear();
+    list.clear();
+
+    QProcess * exec;
+    exec = new QProcess(this);
+    list << "PATH=/opt:/opt/p:/bin:";
+    exec->setEnvironment(list);
+    exec->start("/home/kiosk/test.sh");
+    qDebug() << "ne go-no";
+
+
+    QProcess * proc = new QProcess(this);
+    proc->waitForFinished();
+    proc->start("sh", QStringList() << "-c" << "echo \"pre\"; ps -aux; echo \"post\"");
+    proc->setProcessChannelMode(QProcess::MergedChannels);
+    QString str(proc->readAllStandardOutput());
+    qDebug() << str;
+
+    //working???
+    QProcess pro;
+    pro.startDetached("/bin/bash", QStringList() << "/home/kiosk/test.sh");
+    qDebug() << "test";
+
+    /*
     QByteArray fileData;
     QFile file("/srv/final/dispatcher.properties");
     if(file.open(stderr, QIODevice::ReadWrite))
@@ -119,12 +144,13 @@ void MainWindow::on_btnSubmit_clicked()
         QProcess process;
         process.start("xinput_calibrator | sed -n '/Section/,/EndSection/p' > /etc/X11/xorg.conf.d/99-calibration.conf");
     }
+    */
 
 }
 
-void MainWindow::on_webView_linkClicked(const QUrl &arg1)
+void MainWindow::on_webView_linkClicked(const QUrl &arg)
 {
-    QString link = arg1.toString();
+    QString link = arg.toString();
     qDebug() << link;
     if (link == "http://localhost/test/calibration")
     {
