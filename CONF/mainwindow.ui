@@ -28,15 +28,6 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QWebView" name="webView">
-      <property name="url">
-       <url>
-        <string>http://localhost/test/</string>
-       </url>
-      </property>
-     </widget>
-    </item>
-    <item>
      <layout class="QGridLayout" name="gridLayout">
       <property name="leftMargin">
        <number>20</number>
@@ -54,57 +45,12 @@
        <number>10</number>
       </property>
       <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>TextLabel</string>
+       <widget class="QWebView" name="webView">
+        <property name="url">
+         <url>
+          <string>http://localhost/test/</string>
+         </url>
         </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="btnSubmit">
-        <property name="text">
-         <string>SUBMIT</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QPushButton" name="btnCalibrate">
-        <property name="text">
-         <string>CALIBRATE</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="btnRestart">
-        <property name="text">
-         <string>restart bill validator</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="comboBox">
-        <item>
-         <property name="text">
-          <string>---</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>MEI</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>CashCode</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>
