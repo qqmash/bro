@@ -155,20 +155,43 @@ void bro::on_webView_loadFinished(bool ok)
 void bro::on_webView_linkClicked(const QUrl &arg1)
 {
     QString link = arg1.toString();
-     qDebug() << link;
-     if (link == "http://localhost/test/calibration")
-     {
-         QProcess process;
-         process.start("/bin/sh -c \"xinput_calibrator | sed -n '/Section/,/EndSection/p' > /etc/X11/xorg.conf.d/99-calibration.conf\"");
-     }
-     else if (link == "http://localhost/test/bro")
-     {
-         QProcess process;
-         process.start("bro");
-     }
-     else if (link == "http://localhost/test/settings" || link == "http://localhost/test/conf")
-     {
-         QProcess process;
-         process.start("conf");
-     }
+    qDebug() << link;
+    QString basePath = "http://localhost/admin/";
+    //QString basePath = "http://localhost/test/";
+    if (link == basePath + "cali" || link == basePath + "calibrate" || link == basePath + "calibration")
+    {
+        QProcess process;
+        process.start("/bin/sh -c \"xinput_calibrator | sed -n '/Section/,/EndSection/p' > /etc/X11/xorg.conf.d/99-calibration.conf\"");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "bro"|| link == basePath + "browser")
+    {
+        QProcess process;
+        process.start("killall -s 9 bro");
+        process.waitForFinished();
+        process.start("bro");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "conf" || link == basePath + "settings")
+    {
+        QProcess process;
+        process.start("conf");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "reboot")
+    {
+        QProcess process;
+        process.start("sudo reboot");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "firefox")
+    {
+        QProcess process;
+        process.start("firefox");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "close" || link == basePath + "quit" || link == basePath + "exit")
+    {
+        QApplication::quit();
+    }
 }

@@ -30,6 +30,66 @@ void MainWindow::on_btnCalibrate_clicked()
     qDebug()<<output;
 }
 
+void MainWindow::on_webView_linkClicked(const QUrl &arg1)
+{
+    QString link = arg1.toString();
+    qDebug() << link;
+    QString basePath = "http://localhost/admin/";
+    //QString basePath = "http://localhost/test/";
+    if (link == basePath + "cali" || link == basePath + "calibrate" || link == basePath + "calibration")
+    {
+        QProcess process;
+        process.start("/bin/sh -c \"xinput_calibrator | sed -n '/Section/,/EndSection/p' > /etc/X11/xorg.conf.d/99-calibration.conf\"");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "bro"|| link == basePath + "browser")
+    {
+        QProcess process;
+        process.start("killall -s 9 bro");
+        process.waitForFinished();
+        process.start("bro");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "conf" || link == basePath + "settings")
+    {
+        QProcess process;
+        process.start("conf");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "reboot")
+    {
+        QProcess process;
+        process.start("sudo reboot");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "firefox")
+    {
+        QProcess process;
+        process.start("firefox");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "close" || link == basePath + "quit" || link == basePath + "exit")
+    {
+        QApplication::quit();
+    }
+
+
+    //save bill validator settings
+    else if (link == basePath + "save")
+    {
+        //QWebFrame frame = ui->webView->page()->mainFrame()->documentElement();
+
+        //qDebug() << ui->webView->page()->mainFrame()->findAllElements("*");
+        //doc = frame.documentElement();
+        //s = doc.findFirst("select[name=port]");
+        //s.getAttribute("value");
+        //s = doc.findFirst("select[name=type]");
+    }
+}
+
+
+
+
 /*
 
 void MainWindow::on_pushButton_2_clicked()
@@ -51,7 +111,6 @@ void MainWindow::on_pushButton_2_clicked()
     qDebug()<<output;
 }
 
-
 void MainWindow::on_pushButton_clicked()
 {
     QProcess process;
@@ -61,9 +120,7 @@ void MainWindow::on_pushButton_clicked()
     qDebug()<<output;
 }
 
-*/
 
-/*
 void MainWindow::on_btnSubmit_clicked()
 {
 
@@ -124,47 +181,3 @@ void MainWindow::on_btnSubmit_clicked()
 }
 */
 
-
-void MainWindow::on_webView_linkClicked(const QUrl &arg1)
-{
-    QString link = arg1.toString();
-    qDebug() << link;
-    //if (link == "http://localhost/test/calibration")
-    //QString basePath = "http://localhost/html/admin/";
-    QString basePath = "http://localhost/test/";
-    if (link == basePath + "calibration"|| link == basePath + "cali")
-    {
-        QProcess process;
-        process.start("/bin/sh -c \"xinput_calibrator | sed -n '/Section/,/EndSection/p' > /etc/X11/xorg.conf.d/99-calibration.conf\"");
-        process.waitForFinished();
-    }
-    else if (link == basePath + "bro")
-    {
-        QProcess process;
-        process.start("bro");
-        process.waitForFinished();
-    }
-    else if (link == basePath + "settings" || link == basePath + "conf")
-    {
-        QProcess process;
-        process.start("conf");
-        process.waitForFinished();
-    }
-    else if (link == basePath + "reboot")
-    {
-        QProcess process;
-        process.start("reboot");
-        process.waitForFinished();
-    }
-    //save bill validator settings
-    else if (link == basePath + "save")
-    {
-        //QWebFrame frame = ui->webView->page()->mainFrame()->documentElement();
-
-        //qDebug() << ui->webView->page()->mainFrame()->findAllElements("*");
-        //doc = frame.documentElement();
-        //s = doc.findFirst("select[name=port]");
-        //s.getAttribute("value");
-        //s = doc.findFirst("select[name=type]");
-    }
-}
