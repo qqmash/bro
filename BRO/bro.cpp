@@ -156,7 +156,7 @@ void bro::on_webView_linkClicked(const QUrl &arg1)
 {
     QString link = arg1.toString();
     qDebug() << link;
-    QString basePath = "http://localhost/admin/";
+    QString basePath = "http://127.0.0.1/";
     //QString basePath = "http://localhost/test/";
     if (link == basePath + "cali" || link == basePath + "calibrate" || link == basePath + "calibration")
     {
