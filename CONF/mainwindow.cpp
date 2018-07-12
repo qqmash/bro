@@ -40,7 +40,8 @@ void MainWindow::on_webView_linkClicked(const QUrl &arg1)
         QProcess process;
         process.start("killall -s 9 bro");
         process.waitForFinished();
-        process.start("bro");
+        //process.start("bro");
+        process.startDetached("bro");
         process.waitForFinished();
     }
     else if (link == basePath + "conf" || link == basePath + "settings")
@@ -48,7 +49,8 @@ void MainWindow::on_webView_linkClicked(const QUrl &arg1)
         QProcess process;
         process.start("killall -s 9 conf");
         process.waitForFinished();
-        process.start("conf");
+        //process.start("conf");
+        process.startDetached("conf");
         process.waitForFinished();
     }
     else if (link == basePath + "reboot")
@@ -70,16 +72,18 @@ void MainWindow::on_webView_linkClicked(const QUrl &arg1)
 
 
     //save bill validator settings
+    /*
     else if (link == basePath + "save")
     {
-        //QWebFrame frame = ui->webView->page()->mainFrame()->documentElement();
+        QWebFrame frame = ui->webView->page()->mainFrame()->documentElement();
 
-        //qDebug() << ui->webView->page()->mainFrame()->findAllElements("*");
-        //doc = frame.documentElement();
-        //s = doc.findFirst("select[name=port]");
-        //s.getAttribute("value");
-        //s = doc.findFirst("select[name=type]");
+        qDebug() << ui->webView->page()->mainFrame()->findAllElements("*");
+        doc = frame.documentElement();
+        s = doc.findFirst("select[name=port]");
+        s.getAttribute("value");
+        s = doc.findFirst("select[name=type]");
     }
+    */
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *k)

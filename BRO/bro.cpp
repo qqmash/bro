@@ -169,7 +169,8 @@ void bro::on_webView_linkClicked(const QUrl &arg1)
         QProcess process;
         process.start("killall -s 9 bro");
         process.waitForFinished();
-        process.start("bro");
+        //process.start("bro");
+        process.startDetached("bro");
         process.waitForFinished();
     }
     else if (link == basePath + "conf" || link == basePath + "settings")
@@ -177,7 +178,8 @@ void bro::on_webView_linkClicked(const QUrl &arg1)
         QProcess process;
         process.start("killall -s 9 conf");
         process.waitForFinished();
-        process.start("conf");
+        //process.start("conf");
+        process.startDetached("conf");
         process.waitForFinished();
     } 
     else if (link == basePath + "reboot")
