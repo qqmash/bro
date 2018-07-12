@@ -6,6 +6,9 @@
 #include <QWebFrame>
 #include <QFile>
 
+#include <QKeyEvent>
+#include <QtGui/QKeyEvent>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -21,21 +24,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_btnCalibrate_clicked()
-{
-    QProcess process;
-    process.start("/bin/sh -c \"xinput_calibrator | sed -n '/Section/,/EndSection/p' > /etc/X11/xorg.conf.d/99-calibration.conf\"");
-    process.waitForFinished();
-    QString output(process.readAllStandardOutput());
-    qDebug()<<output;
-}
-
 void MainWindow::on_webView_linkClicked(const QUrl &arg1)
 {
     QString link = arg1.toString();
     qDebug() << link;
     QString basePath = "http://localhost/admin/";
-    //QString basePath = "http://localhost/test/";
     if (link == basePath + "cali" || link == basePath + "calibrate" || link == basePath + "calibration")
     {
         QProcess process;
@@ -53,6 +46,8 @@ void MainWindow::on_webView_linkClicked(const QUrl &arg1)
     else if (link == basePath + "conf" || link == basePath + "settings")
     {
         QProcess process;
+        process.start("killall -s 9 conf");
+        process.waitForFinished();
         process.start("conf");
         process.waitForFinished();
     }
@@ -87,10 +82,42 @@ void MainWindow::on_webView_linkClicked(const QUrl &arg1)
     }
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *k)
+{
+    switch(k->key())
+    {
+    case Qt::Key_F5:
+    case Qt::Key_5:
+    case Qt::Key_R:
+    case QKeySequence::Refresh:
+            k->accept();
+            ui->webView->load(QUrl("http://localhost/admin/"));
+            qDebug() << "Refreshed";
+            break;
+    case Qt::Key_F11:
+            k->accept();
+            qDebug() << "Fullscreen";
+            break;
+    default:
+        k->ignore();
+        break;
+    }
 
+    QWidget::keyPressEvent(k);
+}
 
 
 /*
+
+
+void MainWindow::on_btnCalibrate_clicked()
+{
+    QProcess process;
+    process.start("/bin/sh -c \"xinput_calibrator | sed -n '/Section/,/EndSection/p' > /etc/X11/xorg.conf.d/99-calibration.conf\"");
+    process.waitForFinished();
+    QString output(process.readAllStandardOutput());
+    qDebug()<<output;
+}
 
 void MainWindow::on_pushButton_2_clicked()
 {

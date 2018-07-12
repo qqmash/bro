@@ -175,9 +175,11 @@ void bro::on_webView_linkClicked(const QUrl &arg1)
     else if (link == basePath + "conf" || link == basePath + "settings")
     {
         QProcess process;
+        process.start("killall -s 9 conf");
+        process.waitForFinished();
         process.start("conf");
         process.waitForFinished();
-    }
+    } 
     else if (link == basePath + "reboot")
     {
         QProcess process;
