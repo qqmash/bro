@@ -65,6 +65,11 @@ void MainWindow::on_webView_linkClicked(const QUrl &arg1)
         process.start("sudo poweroff");
         process.waitForFinished();
     }
+    else if (link == basePath + "refresh")
+    {
+        ui->webView->load(QUrl("http://localhost/admin/"));
+        qDebug() << "Refreshed";
+    }
     else if (link == basePath + "firefox")
     {
         QProcess process;
