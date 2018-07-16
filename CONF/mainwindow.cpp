@@ -59,6 +59,12 @@ void MainWindow::on_webView_linkClicked(const QUrl &arg1)
         process.start("sudo reboot");
         process.waitForFinished();
     }
+    else if (link == basePath + "poweroff")
+    {
+        QProcess process;
+        process.start("sudo poweroff");
+        process.waitForFinished();
+    }
     else if (link == basePath + "firefox")
     {
         QProcess process;
