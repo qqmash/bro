@@ -20,10 +20,6 @@ bro::bro(QWidget *parent) :
     //set the manual handling of link click
     ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
-    //timer = new QTimer();
-    //connect(timer, SIGNAL(timeout()), this, SLOT(slotTimerAlarm()));
-    //timer->start(1000);
-
     /*
     QKeySequence keys_refresh(Qt::Key_F5);
     QAction* actionReload = new QAction(this);
@@ -32,13 +28,15 @@ bro::bro(QWidget *parent) :
     ui->webView->addAction(actionReload);
     */
 
-    //QTimer::singleShot(1000, this, SLOT(slotTimerAlarm()));
     //ui->webView->setHtml("<div text-align=\"center\"><span vertical-align=\"middle\"><h1>UMAI</h1><br><h1>Loading...</h1></span><div>");
     ui->webView->show();
+
     //ui->webView->load(QUrl("http://127.0.0.1/"));
     //ui->webView->show();
     QTimer::singleShot(5000, this, SLOT(slotTimerAlarm()));
-    ui->webView->load(QUrl("http://127.0.0.1/"));
+//    ui->webView->load(QUrl("http://127.0.0.1/"));
+    ui->webView->load(QUrl(url));
+
 
 }
 
@@ -58,17 +56,32 @@ void bro::slotTimerAlarm()
 }
 
 
-void bro::keyPressEvent(QKeyEvent *k)
+void bro::zoom(double factor)
 {
     QSettings *settings = new QSettings("settings.conf", QSettings::NativeFormat);
-/*
+
+    if (ui->webView->zoomFactor() > 0.5 && ui->webView->zoomFactor() < 3)
+    {
+        ui->webView->setZoomFactor(ui->webView->zoomFactor() + factor);
+        qDebug() << "Zoom";
+
+        settings->setValue("settings/size",ui->webView->zoomFactor());
+        qDebug() << settings->value("settings/size", 1).toReal();
+    }
+
+    /*
     QFile settings("bro.conf");
     if (settings.open(QIODevice::ReadWrite))
     {
         QTextStream stream (&settings);
         stream << "something" << endl;
-    }*/
+    }
+    */
+}
 
+
+void bro::keyPressEvent(QKeyEvent *k)
+{
     switch(k->key())
     {
     case Qt::Key_F5:
@@ -76,8 +89,8 @@ void bro::keyPressEvent(QKeyEvent *k)
     case Qt::Key_R:
     case QKeySequence::Refresh:
             k->accept();
-            ui->webView->load(QUrl("http://127.0.0.1/"));
-            qDebug() << "Refreshed";
+            ui->webView->load(QUrl(url));
+            qDebug() << "Refresh";
             break;
     case Qt::Key_F11:
             k->accept();
@@ -87,41 +100,18 @@ void bro::keyPressEvent(QKeyEvent *k)
     case Qt::Key_1:
     case Qt::Key_Q:
             k->accept();
-            ui->webView->load(QUrl("http://127.0.0.1/test/index.php"));
+            ui->webView->load(QUrl("http://127.0.0.1/admin/"));
             qDebug() << "Settings";
             break;
     case Qt::Key_Plus:
             k->accept();
-            if (ui->webView->zoomFactor() < 3)
-            {
-                ui->webView->setZoomFactor(ui->webView->zoomFactor() + 0.05);
-                qDebug() << "Zoom +";
-
-                settings->setValue("settings/size",ui->webView->zoomFactor());
-                qDebug() << settings->value("settings/size", 1).toReal();
-            }
-            /*if (settings.open(QIODevice::ReadWrite))
-            {
-                QDataStream stream (&settings);
-                stream << ui->webView->zoomFactor() << endl;
-            }*/
+            zoom(0.05);
+            qDebug() << "Zoom +";
             break;
     case Qt::Key_Minus:
             k->accept();
-            if (ui->webView->zoomFactor() > 0.5)
-            {
-                ui->webView->setZoomFactor(ui->webView->zoomFactor() - 0.05);
-                qDebug() << "Zoom -";
-
-                settings->setValue("settings/size",ui->webView->zoomFactor());
-                qDebug() << settings->value("settings/size", 1).toReal();
-            }
-            /*if (settings.open(QIODevice::ReadWrite))
-            {
-                QDataStream stream (&settings);
-                QTextStream stream (&settings);
-                stream << ui->webView->zoomFactor().toString() << endl;
-            }*/
+            zoom(-0.05);
+            qDebug() << "Zoom -";
             break;
     default:
         k->ignore();
@@ -129,6 +119,95 @@ void bro::keyPressEvent(QKeyEvent *k)
     }
 
     QWidget::keyPressEvent(k);
+}
+
+
+void bro::on_webView_linkClicked(const QUrl &arg1)
+{
+    QString link = arg1.toString();
+    qDebug() << link;
+    QString basePath;
+
+    //===============================================================
+    //don't fuck with this, just make absolute links like umai://goto
+    //===============================================================
+
+    basePath = url;
+    
+    if (link == basePath + "cali" || link == basePath + "calibrate" || link == basePath + "calibration")
+    {
+        QProcess process;
+        process.start("/bin/sh -c \"xinput_calibrator | sed -n '/Section/,/EndSection/p' > /etc/X11/xorg.conf.d/99-calibration.conf\"");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "bro"|| link == basePath + "browser")
+    {
+        //call of other application
+
+        /*
+        QProcess process;
+        process.start("killall -s 9 bro");
+        process.waitForFinished();
+        //process.start("bro"); //for "modal window"
+        process.startDetached("bro");
+        process.waitForFinished();
+        */
+
+        ui->webView->load(QUrl("http://127.0.0.1/"));
+
+    }
+    else if (link == basePath + "conf" || link == basePath + "settings")
+    {
+        //call of other application
+
+        /*
+        QProcess process;
+        process.start("killall -s 9 bro");
+        process.waitForFinished();
+        process.startDetached("bro -c");
+        process.waitForFinished();
+        */
+
+        /*
+        QProcess process;
+        process.start("killall -s 9 conf");
+        process.waitForFinished();
+        process.startDetached("conf");
+        process.waitForFinished();
+        */
+
+        ui->webView->load(QUrl("http://127.0.0.1/admin"));
+
+    } 
+    else if (link == basePath + "reboot")
+    {
+        QProcess process;
+        process.start("sudo reboot");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "poweroff")
+    {
+        QProcess process;
+        process.start("sudo poweroff");
+        process.waitForFinished();
+    }
+    else if (link == basePath + "refresh")
+    {
+        ui->webView->load(QUrl("http://localhost/admin/"));
+        qDebug() << "Refreshed";
+    }
+    else if (link == basePath + "close" || link == basePath + "quit" || link == basePath + "exit")
+    {
+        QApplication::quit();
+    }
+    else if (link == basePath + "zoom_plus")
+    {
+        zoom(0.05);
+    }
+    else if (link == basePath + "zoom_minus")
+    {
+        zoom(-0.05);
+    }
 }
 
 void bro::on_webView_loadFinished(bool ok)
@@ -148,54 +227,5 @@ void bro::on_webView_loadFinished(bool ok)
     else
     {
         qDebug() << "refreshed!";
-    }
-
-}
-
-void bro::on_webView_linkClicked(const QUrl &arg1)
-{
-    QString link = arg1.toString();
-    qDebug() << link;
-    QString basePath = "http://127.0.0.1/";
-    //QString basePath = "http://localhost/test/";
-    if (link == basePath + "cali" || link == basePath + "calibrate" || link == basePath + "calibration")
-    {
-        QProcess process;
-        process.start("/bin/sh -c \"xinput_calibrator | sed -n '/Section/,/EndSection/p' > /etc/X11/xorg.conf.d/99-calibration.conf\"");
-        process.waitForFinished();
-    }
-    else if (link == basePath + "bro"|| link == basePath + "browser")
-    {
-        QProcess process;
-        process.start("killall -s 9 bro");
-        process.waitForFinished();
-        //process.start("bro");
-        process.startDetached("bro");
-        process.waitForFinished();
-    }
-    else if (link == basePath + "conf" || link == basePath + "settings")
-    {
-        QProcess process;
-        process.start("killall -s 9 conf");
-        process.waitForFinished();
-        //process.start("conf");
-        process.startDetached("conf");
-        process.waitForFinished();
-    } 
-    else if (link == basePath + "reboot")
-    {
-        QProcess process;
-        process.start("sudo reboot");
-        process.waitForFinished();
-    }
-    else if (link == basePath + "firefox")
-    {
-        QProcess process;
-        process.start("firefox");
-        process.waitForFinished();
-    }
-    else if (link == basePath + "close" || link == basePath + "quit" || link == basePath + "exit")
-    {
-        QApplication::quit();
     }
 }
