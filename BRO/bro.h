@@ -13,6 +13,8 @@
 #include <QFile>
 #include <QSettings>
 
+#include <QtWebKitWidgets>
+
 namespace Ui {
 class bro;
 }
@@ -34,6 +36,7 @@ private slots:
 private:
     Ui::bro *ui;
     QTimer *timer;
+    QUrl url;
 
 protected:
     void keyPressEvent(QKeyEvent *event);

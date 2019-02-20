@@ -7,12 +7,13 @@ bro::bro(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    url = QUrl("http://127.0.0.1/");
+    //url = QUrl("http://10.76.0.33/");
+
     QSettings *settings = new QSettings("settings.conf", QSettings::NativeFormat);
     settings->sync();
-    qDebug() << settings->value("settings/size", 1).toReal();
-
     ui->webView->setZoomFactor(settings->value("settings/size", 1).toReal());
-    qDebug() << ui->webView->zoomFactor();
+    qDebug() << "Zoom:" << ui->webView->zoomFactor();
 
     QWebSettings::clearMemoryCaches();
     //QWebSettings::setLocalStoragePath(QString("~/.cache/bro/"));
@@ -34,11 +35,17 @@ bro::bro(QWidget *parent) :
 
     //QTimer::singleShot(1000, this, SLOT(slotTimerAlarm()));
     //ui->webView->setHtml("<div text-align=\"center\"><span vertical-align=\"middle\"><h1>UMAI</h1><br><h1>Loading...</h1></span><div>");
+    ui->webView->load(url);
     ui->webView->show();
-    //ui->webView->load(QUrl("http://127.0.0.1/"));
-    //ui->webView->show();
+    QWebElement e = ui->webView->page()->mainFrame()->findFirstElement("div#companies");
+    if (e.toPlainText() == "") qDebug() << "nothing";
+    qDebug() << e.toPlainText();
+
     QTimer::singleShot(5000, this, SLOT(slotTimerAlarm()));
-    ui->webView->load(QUrl("http://127.0.0.1/"));
+    ui->webView->load(url);
+    e = ui->webView->page()->mainFrame()->findFirstElement("div#companies");
+    if (e.toPlainText() == "") qDebug() << "nothing";
+    qDebug() << e.toPlainText();
 
 }
 
@@ -50,9 +57,15 @@ bro::~bro()
 void bro::slotTimerAlarm()
 {
     //after 27 second refresh page
+
     //if (ui->webView->page() && ui->webView->loadFinished())
     //if (ui->webView->page()->networkAccessManager())
-    ui->webView->load(QUrl("http://127.0.0.1/"));
+
+    QWebElement e = ui->webView->page()->mainFrame()->findFirstElement("div#companies");
+    if (e.toPlainText() == "") qDebug() << "nothing";
+    qDebug() << e.toPlainText();
+
+    ui->webView->load(url);
     ui->webView->show();
     qDebug() << "first start!";
 }
@@ -76,7 +89,7 @@ void bro::keyPressEvent(QKeyEvent *k)
     case Qt::Key_R:
     case QKeySequence::Refresh:
             k->accept();
-            ui->webView->load(QUrl("http://127.0.0.1/"));
+            ui->webView->load(url);
             qDebug() << "Refreshed";
             break;
     case Qt::Key_F11:
@@ -141,14 +154,23 @@ void bro::on_webView_loadFinished(bool ok)
 
     if (!ok) // && !(ui->webView->page()->mainFrame()) )
     {
-        //ui->webView->load(QUrl("http://127.0.0.1/"));
-        //ui->webView->show();
+        ui->webView->load(url);
+        ui->webView->show();
         qDebug() << "not loaded!";
     }
     else
     {
         qDebug() << "refreshed!";
     }
+
+    QWebElement mainFrame = ui->webView->page()->mainFrame()->findFirstElement("div#companies");
+    if (mainFrame.toPlainText() == "") qDebug() << "nothing";
+    qDebug() << mainFrame.toPlainText();
+
+    QWebElementCollection elements = ui->webView->page()->mainFrame()->findAllElements("a");
+      foreach (QWebElement e, elements) {
+        // Process element e
+      }
 
 }
 
