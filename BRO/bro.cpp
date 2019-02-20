@@ -169,7 +169,8 @@ void bro::on_webView_linkClicked(const QUrl &arg1)
         QProcess process;
         process.start("killall -s 9 bro");
         process.waitForFinished();
-        //process.start("bro");
+        process.start("sudo pkill bro");
+        process.waitForFinished();
         process.startDetached("bro");
         process.waitForFinished();
     }
@@ -178,7 +179,8 @@ void bro::on_webView_linkClicked(const QUrl &arg1)
         QProcess process;
         process.start("killall -s 9 conf");
         process.waitForFinished();
-        //process.start("conf");
+        process.start("sudo pkill conf");
+        process.waitForFinished();
         process.startDetached("conf");
         process.waitForFinished();
     } 
