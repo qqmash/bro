@@ -8,7 +8,6 @@ bro::bro(QWidget *parent) :
     ui->setupUi(this);
 
     url = QUrl("http://127.0.0.1/");
-    //url = QUrl("http://10.76.0.33/");
 
     QSettings *settings = new QSettings("settings.conf", QSettings::NativeFormat);
     settings->sync();
@@ -168,9 +167,30 @@ void bro::on_webView_loadFinished(bool ok)
     qDebug() << mainFrame.toPlainText();
 
     QWebElementCollection elements = ui->webView->page()->mainFrame()->findAllElements("a");
-      foreach (QWebElement e, elements) {
+    foreach (QWebElement e, elements) {
         // Process element e
-      }
+    }
+
+    //stolen from net
+    qDebug() << "Login loaded!";
+    ui->webView->setFocus();
+
+//    if (ui->webView->url().toDisplayString().contains("current_account_cookie"))
+    {
+        qDebug() << "GOT IN!, PARSE XML";
+
+        QWebFrame *frame = ui->webView->page()->mainFrame();
+        QWebElement document = frame->documentElement();
+
+        QWebElement element = document.firstChild();
+        while (!element.isNull())
+        {
+            qDebug() << element.tagName();
+          /// no element.value()?
+            qDebug() << element.firstChild().toPlainText();
+            element = element.nextSibling();
+        }
+    }
 
 }
 
