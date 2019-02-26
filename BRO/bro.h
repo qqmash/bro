@@ -28,13 +28,15 @@ public:
 
 private slots:
     void on_webView_loadFinished(bool arg1);
+    void slotCheckIfLoaded();
     void slotTimerAlarm();
     void on_webView_linkClicked(const QUrl &arg1);
 
 private:
     Ui::bro *ui;
-    QTimer *timer;
+    QTimer timer;
     QUrl url;
+    bool loaded; //to remove
 
 protected:
     void keyPressEvent(QKeyEvent *event);
