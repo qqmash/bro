@@ -2,18 +2,17 @@
 #define BRO_H
 
 #include <QMainWindow>
+#include <QtWebKitWidgets>
 
-#include <QTimer>
+//#include <QTimer>
 #include <QKeyEvent>
-#include <QtGui/QKeyEvent>
+//#include <QtGui/QKeyEvent>
 
 #include <QProcess>
 
-#include <QWebSettings>
-#include <QFile>
+//#include <QWebSettings>
+//#include <QFile>
 #include <QSettings>
-
-#include <QtWebKitWidgets>
 
 namespace Ui {
 class bro;
@@ -30,7 +29,6 @@ public:
 private slots:
     void on_webView_loadFinished(bool arg1);
     void slotTimerAlarm();
-
     void on_webView_linkClicked(const QUrl &arg1);
 
 private:
