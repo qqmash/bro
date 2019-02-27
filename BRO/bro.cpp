@@ -10,12 +10,11 @@ bro::bro(QWidget *parent) :
     ui->setupUi(this);
 
 //    url = QUrl(BASE_PATH);
-//    url = QUrl("http://127.0.0.1/");
-    url = QUrl("http://10.76.0.11");
+    url = QUrl("http://127.0.0.1/");
 
     loaded = false; //to remove
 
-    QSettings *settings = new QSettings("settings.conf", QSettings::NativeFormat);
+    QSettings *settings = new QSettings("~/.config/bro-settings.conf", QSettings::NativeFormat);
     settings->sync();
     ui->webView->setZoomFactor(settings->value("settings/size", 1).toReal());
     qDebug() << "Zoom:" << ui->webView->zoomFactor();
