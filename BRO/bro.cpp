@@ -14,7 +14,8 @@ bro::bro(QWidget *parent) :
 
     loaded = false; //to remove
 
-    QSettings *settings = new QSettings("~/.config/bro.conf", QSettings::NativeFormat);
+//    QSettings *settings = new QSettings("~/.config/bro.conf", QSettings::NativeFormat);
+    QSettings *settings = new QSettings("~/.bro.conf", QSettings::NativeFormat);
     settings->sync();
     ui->webView->setZoomFactor(settings->value("settings/size", 1).toReal());
     qDebug() << "Zoom:" << ui->webView->zoomFactor();
