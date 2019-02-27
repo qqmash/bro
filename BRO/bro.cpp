@@ -14,7 +14,7 @@ bro::bro(QWidget *parent) :
 
     loaded = false; //to remove
 
-    QSettings *settings = new QSettings("~/.config/bro.conf", QSettings::NativeFormat);
+    QSettings *settings = new QSettings("/home/kiosk/.config/bro.conf", QSettings::NativeFormat);
 //    QSettings *settings = new QSettings("~/.bro.conf", QSettings::NativeFormat);
     settings->sync();
     ui->webView->setZoomFactor(settings->value("settings/size", 1).toReal());
@@ -131,7 +131,7 @@ void bro::on_webView_loadFinished(bool ok)
 
 void bro::keyPressEvent(QKeyEvent *k)
 {
-    QSettings *settings = new QSettings("~/.config/bro.conf", QSettings::NativeFormat);
+    QSettings *settings = new QSettings("/home/kiosk/.config/bro.conf", QSettings::NativeFormat);
 
     /*
     QFile settings("bro.conf");
